@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="300.0" maxWidth="400.0" minHeight="300.0" minWidth="400.0" prefHeight="300.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="ru.litvitnik.PrimaryController">
+      <Label fx:id="primaryText" layoutX="80.0" layoutY="117.0" prefHeight="40.0" prefWidth="250.0" text="Здесь будет текст">
+         <font>
+            <Font name="JetBrains Mono Bold" size="24.0" />
+         </font></Label>
+      <Button fx:id="primaryButton" layoutX="161.0" layoutY="167.0" onAction="#switchToSecondary" text="Start" />
+      <Label fx:id="lblInfo" layoutX="14.0" layoutY="14.0" prefHeight="55.0" prefWidth="202.0" text="Длина текста:&#10;Слов в минуту:&#10;Ожидаемое время чтения:" />
+      <Slider layoutX="14.0" layoutY="69.0" />
+      <Button layoutX="280.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClickChooseFile" text="Выбрать файл" />
+</AnchorPane>
