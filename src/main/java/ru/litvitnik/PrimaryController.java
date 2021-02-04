@@ -1,7 +1,6 @@
 package ru.litvitnik;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,14 +38,13 @@ public class PrimaryController {
         if (fileObject != null) {
             String file = fileObject.getPath();
             System.out.println(file);
-            al = filter(loadFromFile(file));
+            al = filterArrayList(loadFromFile(file));
             lblInfo.setText("Длина текста: " + al.size() + "\nСлов в минуту: " + 60_000/delayMillis + "\nОжидаемое время чтения: " + al.size()*delayMillis/1000 + "сек");
         }
     }
     @FXML
     private void switchToSecondary() {
         AtomicInteger i = new AtomicInteger();
-        //ArrayList<String> al = filter(loadFromFile());
         System.out.println(al);
         System.out.println("Количество слов в тексте: " + al.size());
         System.out.println("Скорость чтения: " + 60_000/delayMillis + " слов в минуту");
@@ -63,9 +61,8 @@ public class PrimaryController {
             }
             );
             pause.play();
-            //primaryText.setText(s);
     }
-    public ArrayList<String> filter(String source) {
+    public ArrayList<String> filterArrayList(String source) {
         ArrayList<String> temp = new ArrayList<String>(Arrays.asList(source.split(" ")));
         for(int i = 0; i < temp.size(); i++) {
                 if(temp.get(i).contains("\n")) {
@@ -86,11 +83,24 @@ public class PrimaryController {
         catch (Exception e) {
             e.printStackTrace();
         }
-        StringBuilder sbFinal = new StringBuilder();
-        char[] operative = sb.toString().toCharArray();
-        for(int i = 1; i < operative.length; i++) {
-            
-        }
-        return sb.toString();
+        return filterStringFromFile(sb.toString());
+    }
+    public String filterStringFromFile(String source){
+        //StringBuilder sb = new StringBuilder();
+        //char[] sourceAsCharArray = source.toCharArray();
+        /*
+         * Решение через Регулярные Выражения видится мне максимально неэффективным,
+         * т.к. все это можно было бы сделать за один проход
+         * А еще я так понимаю мне придется проходить его стандартным методом,
+         * чтобы поставить заглавные буквы в начало предложения
+         * Текущий недостаток - не выставляет заглавные.
+         */
+        source = source.replaceAll("\\.(?=\\S[^.])", ". ");
+        source = source.replaceAll(" \\. ", ". ");
+        source = source.replaceAll(",(?=\\S)", ", ");
+        source = source.replaceAll(" , ", ", ");
+        source = source.replaceAll("-(?=\\S)", "- ");
+        source = source.replaceAll("(?<=\\S)-", " -");
+        return source;
     }
 }
