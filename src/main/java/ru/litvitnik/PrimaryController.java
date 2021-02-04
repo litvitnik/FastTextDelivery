@@ -11,22 +11,29 @@ import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.input.ScrollEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class PrimaryController {
 
-    ArrayList<String> al = new ArrayList<>();
-    int delayMillis = 150;
-    String text = "";
-
+    @FXML
+    public Slider sliderSpeed;
     @FXML
     public Button primaryButton;
     @FXML
     Label primaryText;
     @FXML
     Label lblInfo;
+
+
+    ArrayList<String> al = new ArrayList<>();
+    int delayMillis = 150;
+    String text = "";
+
+
     @FXML
     private void onClickChooseFile() {
         FileChooser fileChooser = new FileChooser();
@@ -87,7 +94,7 @@ public class PrimaryController {
     }
     public String filterStringFromFile(String source){
         //StringBuilder sb = new StringBuilder();
-        //char[] sourceAsCharArray = source.toCharArray();
+
         /*
          * Решение через Регулярные Выражения видится мне максимально неэффективным,
          * т.к. все это можно было бы сделать за один проход
@@ -101,6 +108,16 @@ public class PrimaryController {
         source = source.replaceAll(" , ", ", ");
         source = source.replaceAll("-(?=\\S)", "- ");
         source = source.replaceAll("(?<=\\S)-", " -");
+        //Заглавные буквы после точек
+        char[] sourceAsCharArray = source.toCharArray();
+        for(int i = 2; i < sourceAsCharArray.length; i++){
+            if(sourceAsCharArray[i-2]=='.') sourceAsCharArray[i] = Character.toUpperCase(sourceAsCharArray[i]);
+        }
+        source = String.valueOf(sourceAsCharArray);
         return source;
+    }
+
+    public void sliderFinished() {
+        System.out.println(sliderSpeed.getValue());
     }
 }
