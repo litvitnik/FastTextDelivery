@@ -6,13 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.input.ScrollEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -29,9 +27,10 @@ public class PrimaryController {
     Label lblInfo;
 
 
-    ArrayList<String> al = new ArrayList<>();
+    ArrayList<String> allWordsList = new ArrayList<>();
     int delayMillis = 150;
     String text = "";
+    int wordsPerMinute = 400;
 
 
     @FXML
@@ -44,25 +43,23 @@ public class PrimaryController {
         File fileObject = fileChooser.showOpenDialog(new Stage());
         if (fileObject != null) {
             String file = fileObject.getPath();
-            System.out.println(file);
-            al = filterArrayList(loadFromFile(file));
-            lblInfo.setText("Длина текста: " + al.size() + "\nСлов в минуту: " + 60_000/delayMillis + "\nОжидаемое время чтения: " + al.size()*delayMillis/1000 + "сек");
+            allWordsList = filterArrayList(loadFromFile(file));
+            lblInfo.setText("Длина текста: " + allWordsList.size() + "\nСлов в минуту: " + 60_000/delayMillis + "\nОжидаемое время чтения: " + allWordsList.size()*delayMillis/1000 + "сек");
         }
     }
     @FXML
     private void switchToSecondary() {
         AtomicInteger i = new AtomicInteger();
-        System.out.println(al);
-        System.out.println("Количество слов в тексте: " + al.size());
+        System.out.println(allWordsList);
+        System.out.println("Количество слов в тексте: " + allWordsList.size());
         System.out.println("Скорость чтения: " + 60_000/delayMillis + " слов в минуту");
-        System.out.println("Ожидаемое время чтения: " + al.size()*delayMillis/1000 + " сек");
-            //Duration.seconds(1)
+        System.out.println("Ожидаемое время чтения: " + allWordsList.size()*delayMillis/1000 + " сек");
             PauseTransition pause = new PauseTransition(Duration.millis(delayMillis));
             pause.setOnFinished(event -> {
-                    if(i.get() <al.size())
+                    if(i.get() < allWordsList.size())
                     {
-                        System.out.print("\"" + al.get(i.get()) + "\"\n");
-                        primaryText.setText(al.get(i.getAndIncrement()));
+                        System.out.print("\"" + allWordsList.get(i.get()) + "\"\n");
+                        primaryText.setText(allWordsList.get(i.getAndIncrement()));
                         pause.play();
                     }
             }
@@ -118,6 +115,12 @@ public class PrimaryController {
     }
 
     public void sliderFinished() {
+        sliderSpeed.setValue(valueRoundToTen(sliderSpeed.getValue()));
         System.out.println(sliderSpeed.getValue());
+        delayMillis = (int) (60_000 / valueRoundToTen(sliderSpeed.getValue()));
+    }
+    public double valueRoundToTen(double value){
+        return Math.round(value/10) * 10;
     }
 }
+
